@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Production-quality interactive Algorithm Visualizer for sorting, searching, and graph algorithms built with HTML5, CSS3, and vanilla JavaScript.">
+  <meta name="keywords" content="algorithm visualizer, sorting algorithms, bubble sort, merge sort, quick sort, dijkstra, binary search, data structures, educational tool">
+  <title>ALGO VIZ — Interactive Algorithm Visualizer</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header" role="banner">
+    <div class="brand-container">
+      <button id="btn-sidebar-toggle" class="icon-btn sidebar-toggle-btn" aria-label="Toggle Navigation Menu" style="display: none;">
+        ☰
+      </button>
+      <div class="brand-logo" aria-hidden="true">⚡</div>
+      <div class="brand-titles">
+        <h1 class="brand-title">ALGO VIZ</h1>
+        <span class="brand-subtitle">Interactive Algorithm Visualizer</span>
+      </div>
+    </div>
+
+    <nav class="header-nav" role="navigation" aria-label="Primary Navigation">
+      <button id="nav-btn-visualizer" class="nav-link-btn active" aria-current="page">Visualizer</button>
+      <button id="btn-about" class="nav-link-btn">About</button>
+    </nav>
+
+    <div class="header-actions">
+      <button id="btn-sound-toggle" class="icon-btn" title="Toggle Audio Cues (Synthesizer)" aria-label="Toggle Sound">
+        🔇
+      </button>
+      <button id="btn-theme-toggle" class="icon-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+        ☀️
+      </button>
+      <button id="btn-shortcuts" class="icon-btn" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
+        ⌨️
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- Main Container -->
+  <div class="app-container">
+
+    <!-- Left Navigation Sidebar -->
+    <aside id="app-sidebar" class="app-sidebar" role="navigation" aria-label="Algorithm Categories">
+      
+      <!-- Sorting Section -->
+      <div class="sidebar-section">
+        <h2 class="sidebar-category-title">
+          <span>📊</span> SORTING
+        </h2>
+        <ul class="algo-nav-list" role="list">
+          <li>
+            <button class="algo-item-btn active" data-algo="bubble-sort">
+              <span>Bubble Sort</span>
+              <span class="algo-badge">O(n²)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="selection-sort">
+              <span>Selection Sort</span>
+              <span class="algo-badge">O(n²)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="insertion-sort">
+              <span>Insertion Sort</span>
+              <span class="algo-badge">O(n²)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="merge-sort">
+              <span>Merge Sort</span>
+              <span class="algo-badge">O(n log n)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="quick-sort">
+              <span>Quick Sort</span>
+              <span class="algo-badge">O(n log n)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="heap-sort">
+              <span>Heap Sort</span>
+              <span class="algo-badge">O(n log n)</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Searching Section -->
+      <div class="sidebar-section">
+        <h2 class="sidebar-category-title">
+          <span>🔍</span> SEARCHING
+        </h2>
+        <ul class="algo-nav-list" role="list">
+          <li>
+            <button class="algo-item-btn" data-algo="linear-search">
+              <span>Linear Search</span>
+              <span class="algo-badge">O(n)</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="binary-search">
+              <span>Binary Search</span>
+              <span class="algo-badge">O(log n)</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Graph Section -->
+      <div class="sidebar-section">
+        <h2 class="sidebar-category-title">
+          <span>🕸️</span> GRAPH
+        </h2>
+        <ul class="algo-nav-list" role="list">
+          <li>
+            <button class="algo-item-btn" data-algo="bfs">
+              <span>BFS (Breadth-First)</span>
+              <span class="algo-badge">Queue</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="dfs">
+              <span>DFS (Depth-First)</span>
+              <span class="algo-badge">Stack</span>
+            </button>
+          </li>
+          <li>
+            <button class="algo-item-btn" data-algo="dijkstra">
+              <span>Dijkstra Shortest Path</span>
+              <span class="algo-badge">Greedy</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- Main Workspace Content -->
+    <main class="app-main" role="main">
+
+      <!-- Header Strip / Meta Information -->
+      <div class="algo-header-bar">
+        <div class="algo-identity">
+          <h2 id="algo-title" class="algo-title">Bubble Sort</h2>
+          <div class="algo-tag-group">
+            <span id="algo-category-badge" class="tag-badge accent">SORTING</span>
+            <span id="badge-inplace" class="tag-badge">In-Place</span>
+            <span id="badge-stable" class="tag-badge">Stable</span>
+          </div>
+        </div>
+        <div class="algo-status-pill">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-text">Ready</span>
+        </div>
+      </div>
+
+      <!-- Visualization Stage Area -->
+      <section class="stage-wrapper" aria-label="Algorithm Visualization Area">
+        
+        <!-- Stage Top Bar (Action description & Legend) -->
+        <div class="stage-header">
+          <div id="stage-action-text" class="stage-action-text">
+            <span class="stage-action-prefix">STEP 1:</span> Ready to begin visualization.
+          </div>
+          <div class="stage-legend">
+            <div class="legend-item"><span class="legend-color compare"></span> Comparing</div>
+            <div class="legend-item"><span class="legend-color swap"></span> Swapping/Shift</div>
+            <div class="legend-item"><span class="legend-color sorted"></span> Sorted/Found</div>
+            <div class="legend-item"><span class="legend-color pivot"></span> Pivot/Key</div>
+            <div class="legend-item"><span class="legend-color visited"></span> Visited</div>
+          </div>
+        </div>
+
+        <!-- Stage Dynamic Body -->
+        <div id="stage-body" class="stage-body">
+          <!-- Dynamically populated with bars, cards, or SVG graph -->
+        </div>
+
+        <!-- Timeline Scrubber Bar -->
+        <div class="stage-timeline">
+          <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">TIMELINE:</span>
+          <input type="range" id="timeline-slider" class="timeline-slider" min="0" max="0" value="0" aria-label="Step Scrubber">
+          <span id="timeline-step-label" class="timeline-step-label">0 / 0</span>
+        </div>
+
+      </section>
+
+      <!-- Control Panel -->
+      <section class="control-panel" aria-label="Playback Controls and Configuration">
+        
+        <!-- Row 1: Primary Actions -->
+        <div class="control-row">
+          
+          <!-- Playback Cluster -->
+          <div class="control-cluster">
+            <button id="btn-play" class="btn btn-primary" title="Start Visualization (Space)">
+              <span>▶</span> <span class="btn-label">Start</span>
+            </button>
+            <button id="btn-pause" class="btn btn-accent" style="display: none;" title="Pause Visualization (Space)">
+              <span>⏸</span> <span class="btn-label">Pause</span>
+            </button>
+            <button id="btn-reset" class="btn" title="Reset Visualization (R)">
+              <span>⟳</span> <span class="btn-label">Reset</span>
+            </button>
+            
+            <button id="btn-step-prev" class="btn" title="Previous Step (Left Arrow)">
+              <span>←</span> <span class="btn-label">Previous Step</span>
+            </button>
+            <button id="btn-step-next" class="btn" title="Next Step (Right Arrow)">
+              <span class="btn-label">Next Step</span> <span>→</span>
+            </button>
+          </div>
+
+          <!-- Array & Graph Action Cluster -->
+          <div class="control-cluster">
+            <div id="array-controls-cluster" style="display: flex; gap: 0.5rem;">
+              <button id="btn-generate-array" class="btn">
+                <span>🎲</span> <span class="btn-label">Generate Array</span>
+              </button>
+              <button id="btn-manual-input" class="btn" title="Enter Custom Array">
+                <span>✏️</span> <span class="btn-label">Custom Input</span>
+              </button>
+            </div>
+            
+            <div id="graph-controls-cluster" style="display: none; gap: 0.5rem;">
+              <button id="btn-sample-graph" class="btn">
+                <span>🔄</span> <span class="btn-label">Reset Graph</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Row 2: Sliders & Algorithmic Options -->
+        <div class="control-row">
+          
+          <!-- Speed Control -->
+          <div class="control-cluster">
+            <div class="control-item">
+              <span class="control-label">Speed</span>
+              <input type="range" id="speed-slider" class="control-slider" min="0.25" max="4" step="0.25" value="1" aria-label="Animation Speed">
+              <span id="speed-val" class="control-val">1x</span>
+            </div>
+            <div class="speed-chips">
+              <button class="speed-chip" data-speed="0.25">0.25x</button>
+              <button class="speed-chip" data-speed="0.5">0.5x</button>
+              <button class="speed-chip active" data-speed="1">1x</button>
+              <button class="speed-chip" data-speed="1.5">1.5x</button>
+              <button class="speed-chip" data-speed="2">2x</button>
+              <button class="speed-chip" data-speed="4">4x</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Algorithm-Specific Parameters -->
+          <div class="control-cluster">
+            
+            <!-- Array Size Slider -->
+            <div id="array-size-control" class="control-item">
+              <span class="control-label">Array Size</span>
+              <input type="range" id="size-slider" class="control-slider" min="5" max="80" value="30" aria-label="Array Size">
+              <span id="size-val" class="control-val">30</span>
+            </div>
+
+            <!-- Quick Sort Pivot Strategy -->
+            <div id="pivot-strategy-control" class="control-item" style="display: none;">
+              <span class="control-label">Pivot Strategy</span>
+              <select id="pivot-strategy-select" class="select-field" aria-label="Quick Sort Pivot Strategy">
+                <option value="random" selected>Random</option>
+                <option value="first">First</option>
+                <option value="last">Last</option>
+              </select>
+            </div>
+
+            <!-- Search Target Input -->
+            <div id="search-target-control" class="control-item" style="display: none;">
+              <span class="control-label">Target</span>
+              <input type="number" id="search-target-input" class="input-field" value="42" aria-label="Search Target Value">
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Bottom Three-Column Dashboard Grid -->
+      <section class="dashboard-grid">
+
+        <!-- Column 1: Algorithm Information -->
+        <article class="grid-card" aria-labelledby="card-algo-info-title">
+          <div class="grid-card-header">
+            <h3 id="card-algo-info-title" class="card-title">
+              <span>📖</span> Algorithm Overview
+            </h3>
+          </div>
+          <div class="grid-card-body">
+            <div id="algo-description" class="algo-desc-text">
+              <!-- Dynamically populated -->
+            </div>
+            
+            <table class="complexity-table" aria-label="Complexity Properties">
+              <tbody>
+                <tr>
+                  <td>Best Time</td>
+                  <td id="comp-time-best">O(n)</td>
+                </tr>
+                <tr>
+                  <td>Average Time</td>
+                  <td id="comp-time-avg">O(n²)</td>
+                </tr>
+                <tr>
+                  <td>Worst Time</td>
+                  <td id="comp-time-worst">O(n²)</td>
+                </tr>
+                <tr>
+                  <td>Space Complexity</td>
+                  <td id="comp-space">O(1)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="prop-badges">
+              <span class="prop-pill">Category: <strong id="prop-category">Sorting</strong></span>
+              <span class="prop-pill">Class: <strong>Comparison-based</strong></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Column 2: Synchronized Pseudocode -->
+        <article class="grid-card" aria-labelledby="card-pseudocode-title">
+          <div class="grid-card-header">
+            <h3 id="card-pseudocode-title" class="card-title">
+              <span>💻</span> How It Works (Pseudocode)
+            </h3>
+          </div>
+          <div class="grid-card-body">
+            <div id="pseudocode-container" class="pseudocode-container" role="region" aria-label="Pseudocode display" tabindex="0">
+              <!-- Dynamically populated with active line highlighting -->
+            </div>
+          </div>
+        </article>
+
+        <!-- Column 3: Live Statistics -->
+        <article class="grid-card" aria-labelledby="card-stats-title">
+          <div class="grid-card-header">
+            <h3 id="card-stats-title" class="card-title">
+              <span>📈</span> Live Statistics
+            </h3>
+          </div>
+          <div class="grid-card-body">
+            <div class="stats-grid">
+              
+              <div class="stat-item">
+                <span id="stat-1-label" class="stat-label">Comparisons</span>
+                <span id="stat-1-val" class="stat-value highlight">0</span>
+              </div>
+
+              <div class="stat-item">
+                <span id="stat-2-label" class="stat-label">Swaps</span>
+                <span id="stat-2-val" class="stat-value">0</span>
+              </div>
+
+              <div class="stat-item">
+                <span id="stat-3-label" class="stat-label">Array Accesses</span>
+                <span id="stat-3-val" class="stat-value">0</span>
+              </div>
+
+              <div class="stat-item">
+                <span id="stat-4-label" class="stat-label">Step / Total</span>
+                <span id="stat-4-val" class="stat-value">0 / 0</span>
+              </div>
+
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ==========================================================================
+       MODALS & DIALOGS
+       ========================================================================== -->
+
+  <!-- Manual Input Modal -->
+  <div id="modal-manual-input" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-manual-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-manual-title" class="modal-title">Custom Array Input</h3>
+        <button id="btn-close-manual" class="icon-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          Enter a comma-separated list of numbers (e.g. <code>12, 5, 8, 3, 19, 2</code>):
+        </p>
+        <textarea id="manual-array-input" class="input-field" style="width: 100%; height: 90px; resize: vertical; padding: 0.75rem;" placeholder="12, 5, 8, 3, 19, 2"></textarea>
+        
+        <div style="display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.5rem;">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Or choose a distribution preset:</span>
+          <div class="preset-chips">
+            <button class="preset-chip" data-preset="random">Random</button>
+            <button class="preset-chip" data-preset="reversed">Reversed</button>
+            <button class="preset-chip" data-preset="nearly-sorted">Nearly Sorted</button>
+            <button class="preset-chip" data-preset="few-unique">Few Unique</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-apply-manual" class="btn btn-primary">Apply Array</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div id="modal-shortcuts" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-shortcuts-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-shortcuts-title" class="modal-title">Keyboard Shortcuts</h3>
+        <button id="btn-close-shortcuts" class="icon-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-list">
+          <div class="shortcut-item">
+            <span>Play / Pause Visualization</span>
+            <kbd class="kbd">Space</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span>Reset to Initial State</span>
+            <kbd class="kbd">R</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span>Step Forward (One Operation)</span>
+            <kbd class="kbd">→</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span>Step Backward (Previous Operation)</span>
+            <kbd class="kbd">←</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span>Toggle Shortcuts Help</span>
+            <kbd class="kbd">?</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span>Close Modal / Drawer</span>
+            <kbd class="kbd">Esc</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div id="modal-about" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-about-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-about-title" class="modal-title">About ALGO VIZ</h3>
+        <button id="btn-close-about" class="icon-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="modal-body" style="line-height: 1.6; font-size: 0.88rem;">
+        <h4 style="color: var(--accent-secondary); font-size: 0.95rem; margin-bottom: 0.25rem;">What is Algorithm Visualization?</h4>
+        <p style="color: var(--text-secondary); margin-bottom: 0.85rem;">
+          Algorithm visualization transforms abstract computer science procedures into dynamic visual representations, making execution flow, memory swaps, partitions, and state transitions intuitive and tangible.
+        </p>
+
+        <h4 style="color: var(--accent-secondary); font-size: 0.95rem; margin-bottom: 0.25rem;">Why Visualization Helps Learning</h4>
+        <p style="color: var(--text-secondary); margin-bottom: 0.85rem;">
+          Rather than memorizing asymptotic complexity tables, seeing pointer movements, recursion stacks, and edge relaxations in real time bridges theoretical intuition with actual computational behavior.
+        </p>
+
+        <h4 style="color: var(--accent-secondary); font-size: 0.95rem; margin-bottom: 0.25rem;">Supported Algorithms</h4>
+        <ul style="padding-left: 1.25rem; color: var(--text-secondary); margin-bottom: 0.85rem;">
+          <li><strong>Sorting:</strong> Bubble Sort, Selection Sort, Insertion Sort, Merge Sort, Quick Sort, Heap Sort</li>
+          <li><strong>Searching:</strong> Linear Search, Binary Search</li>
+          <li><strong>Graph:</strong> Breadth-First Search (BFS), Depth-First Search (DFS), Dijkstra's Algorithm</li>
+        </ul>
+
+        <h4 style="color: var(--accent-secondary); font-size: 0.95rem; margin-bottom: 0.25rem;">Architecture & Technologies</h4>
+        <p style="color: var(--text-secondary);">
+          Built with pure client-side HTML5, modern CSS3 (Custom Properties &amp; Grid/Flexbox), and ES6+ modules. Features deterministic timeline scrubbing, SVG graph drag-and-drop, and Web Audio synthesizer feedback.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" aria-live="polite"></div>
+
+  <!-- Script Application Entrypoint -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
