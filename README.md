@@ -1,4 +1,4 @@
-# ALGO VIZ — Production-Quality Interactive Algorithm Visualizer
+# ALGO VIZ - padhu — Production-Quality Interactive Algorithm Visualizer
 
 An interactive, responsive, developer-portfolio standard Algorithm Visualizer web application built with pure **HTML5, CSS3, and vanilla JavaScript (ES6+)**.
 
